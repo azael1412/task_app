@@ -235,7 +235,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             onPressed: _submit,
                           ),
                         ),
-                        widget.task != null
+                        /*widget.task != null
                             ? Container(
                                 margin: EdgeInsets.symmetric(vertical: 20.0),
                                 height: 60.0,
@@ -255,7 +255,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   onPressed: _delete,
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : SizedBox.shrink(),*/
                       ],
                     ),
                   )
