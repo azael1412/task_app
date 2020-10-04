@@ -6,7 +6,7 @@ import 'package:task_app/task/resources/task_repository.dart';
 class TaskBloc extends ChangeNotifier {
   StreamController<List<Task>> _tasks$ =
       StreamController<List<Task>>.broadcast();
-  List<Task> _tasks = new List();
+  // List<Task> _tasks = new List();
   // Function(List<Task>) get tasksSink => _tasks$.sink.add;
   // Stream<List<Task>> get tasksStream => _tasks$.stream;
 
@@ -24,13 +24,13 @@ class TaskBloc extends ChangeNotifier {
 
   Future<List<Task>> getTasks() async {
     final tasks = await repository.tasks();
-
-    if (tasks != null) {
-      // _tasks$.sink.add(tasks);
-      // tasksSink(tasks);
-      _tasks.addAll(tasks);
-      _tasks$.sink.add(_tasks);
-    }
+    _tasks$.sink.add(tasks);
+    // if (tasks != null) {
+    // _tasks$.sink.add(tasks);
+    // tasksSink(tasks);
+    //   _tasks.addAll(tasks);
+    //   _tasks$.sink.add(_tasks);
+    // }
 
     return tasks != null ? tasks : [];
   }

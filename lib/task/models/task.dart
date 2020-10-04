@@ -4,13 +4,13 @@
 
 import 'dart:convert';
 
-// List<Task> taskFromJson(String str) =>
-//     List<Task>.from(json.decode(str).map((x) => Task.fromJson(x)));
+List<Task> taskFromJson(String str) =>
+    List<Task>.from(json.decode(str).map((x) => Task.fromJson(x)));
 
-List<Task> taskFromJson(String str) {
+/*List<Task> taskFromJson(String str) {
   final result = json.decode(str);
   return List<Task>.from(result['data'].map((x) => Task.fromJson(x)));
-}
+}*/
 
 /*String taskToJson(List<Task> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));*/

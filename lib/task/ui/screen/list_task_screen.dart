@@ -55,7 +55,7 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
         centerTitle: true,
       ),
       body: StreamBuilder<List<Task>>(
-          initialData: [],
+          // initialData: [],
           stream: taskBloc.tasks, //taskBloc.tasksStream,
           builder: (context, AsyncSnapshot<List<Task>> snapshot) {
             switch (snapshot.connectionState) {
@@ -64,12 +64,9 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
               case ConnectionState.waiting:
                 return Loading.loadingIndicators(context: context);
               case ConnectionState.active:
-                print("active");
                 return _listTask(snapshot: snapshot);
-              // return Loading.loadingIndicators(context: context);
-              // case ConnectionState.done:
-              //   print("done");
-              //   return _listTask(snapshot: snapshot);
+              case ConnectionState.done:
+                return _listTask(snapshot: snapshot);
             }
             if (snapshot.hasError) {
               return Text("${snapshot.error.toString()}");
@@ -180,14 +177,14 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
   }
 
   Widget _listTask({AsyncSnapshot<List<Task>> snapshot}) {
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        print("actual ${_scrollController.position.pixels}");
-        print("max: ${_scrollController.position.maxScrollExtent}");
-        // taskBloc.getTasks();
-      }
-    });
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels ==
+    //       _scrollController.position.maxScrollExtent) {
+    //     print("actual ${_scrollController.position.pixels}");
+    //     print("max: ${_scrollController.position.maxScrollExtent}");
+    //     // taskBloc.getTasks();
+    //   }
+    // });
     int completedTaskCount = 0;
     completedTaskCount =
         snapshot.data.where((Task task) => task.status == 1).toList().length;

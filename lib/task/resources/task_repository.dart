@@ -12,6 +12,6 @@ class TaskRepository {
   Future<dynamic> update(Task task) => taskProvider.update(task);
   //update
   Future<dynamic> changeStatus(Task task) => taskProvider.changeStatus(task);
-
+  //delete
   Future<dynamic> delete(Task task) => taskProvider.delete(task);
 }
