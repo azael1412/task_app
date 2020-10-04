@@ -31,10 +31,9 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
     // TODO: implement initState
     super.initState();
 
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   _updateTaskList(context: context);
-    //   print("entre1");
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateTaskList(context: context);
+    });
   }
 
   _updateTaskList({BuildContext context}) {
@@ -55,7 +54,7 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
         centerTitle: true,
       ),
       body: StreamBuilder<List<Task>>(
-          // initialData: [],
+          initialData: [],
           stream: taskBloc.tasks, //taskBloc.tasksStream,
           builder: (context, AsyncSnapshot<List<Task>> snapshot) {
             switch (snapshot.connectionState) {
