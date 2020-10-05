@@ -17,8 +17,11 @@ class RouteGenerartor {
         return MaterialPageRoute(builder: (context) => ListTaskScreen());
 
       case (AppRoutes.addTask):
-        final task = settings.arguments;
-        return FadeTransitionRoute(widget: AddTaskScreen(task: task));
+        final isListArguments = settings.arguments;
+        final task = isListArguments is List ? isListArguments[0] : null;
+        final function = isListArguments is List ? isListArguments[1] : () {};
+        return FadeTransitionRoute(
+            widget: AddTaskScreen(task: task, updateTaskList: function));
     }
   }
 
