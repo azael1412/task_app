@@ -9,6 +9,7 @@ List<Task> taskFromJson(String str) =>
 
 /*List<Task> taskFromJson(String str) {
   final result = json.decode(str);
+  print(result);
   return List<Task>.from(result['data'].map((x) => Task.fromJson(x)));
 }*/
 
