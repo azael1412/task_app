@@ -7,7 +7,8 @@ import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
   final Task task;
-  AddTaskScreen({Key key, this.task}) : super(key: key);
+  final Function updateTaskList;
+  AddTaskScreen({Key key, this.task, this.updateTaskList}) : super(key: key);
 
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
@@ -76,6 +77,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (widget.task == null) {
       _taskBloc.create(task).then((response) {
         if (response is Message) {
+          widget.updateTaskList();
           Navigator.pop(context, [true, response.message]);
         }
         if (response is TaskError) {
@@ -91,6 +93,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       task.id = widget.task.id;
       _taskBloc.update(task).then((response) {
         if (response is Message) {
+          widget.updateTaskList();
           Navigator.pop(context, response.message);
         }
         if (response is TaskError) {
@@ -106,12 +109,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
   // }
 
-  _delete() {
+  /*_delete() {
     print("delete");
-    /*DatabaseHelper.instance.deleteTask(widget.task.id);
-    widget.updateTaskList();
-    Navigator.pop(context);*/
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
