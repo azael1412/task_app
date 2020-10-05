@@ -11,19 +11,11 @@ class TaskProvider {
     'X-Requested-With': 'XMLHttpRequest'
   };
   String url = 'http://192.168.0.10:8000/api/task';
-  // int page = 0;
 
   Future<List<Task>> tasks() async {
     try {
-      // page++;
-      // print(page);
-      // final uri =
-      //     Uri.http('192.168.0.10:8000', '/api/task', {'page': page.toString()});
       final response = await http.get(url, headers: headers);
       if (response.statusCode == 200) {
-        // If the call to the server was successful, parse the JSON
-        // print(response.body);
-
         return taskFromJson(response.body);
       } else {
         // If that call was not successful, throw an error.
