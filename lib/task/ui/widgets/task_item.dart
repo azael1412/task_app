@@ -23,6 +23,7 @@ class TaskItem extends StatefulWidget {
 class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
+    // print("priority: ${widget.task.priority}- id: ${widget.task.priorityId}");
     TaskBloc taskBloc = Provider.of<TaskBloc>(context, listen: false);
     return Dismissible(
       key: UniqueKey(),
