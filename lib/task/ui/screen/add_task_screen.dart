@@ -39,7 +39,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _dateTime = DateTime.parse(widget.task.date);
       _priority = widget.task.priorityId;
     }
-    print("prioridad:$_priority");
     _dateController.text = _dateFormatter.format(_dateTime);
     _titleController.text = _title;
   }
