@@ -19,31 +19,37 @@ List<Task> taskFromJson(String str) =>
 String taskToJson(Task data) => json.encode(data);
 
 class Task {
-  Task({this.id, this.title, this.priority, this.date, this.status});
+  Task(
+      {this.id,
+      this.title,
+      this.date,
+      this.status,
+      this.priority,
+      this.priorityId});
   // Task.withId({this.id, this.title, this.date, this.priority, this.status});
   int id;
   String title;
-  String priority;
-  // DateTime date;
   String date;
   int status;
+  String priority;
+  int priorityId;
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
         id: json["id"],
         title: json["title"],
-        priority: json["priority"],
-        //date: DateTime.parse(json["date"]),
         date: json["date"],
         status: json["status"],
+        priority: json["priority"],
+        priorityId: json["priority_id"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
-        "priority": priority,
         "date": date,
-        //"${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
         "status": status,
+        "priority": priority,
+        "priority_id": priorityId,
       };
 }
 
@@ -57,12 +63,12 @@ class TaskError {
   TaskError({
     this.title,
     this.date,
-    this.priority,
+    this.priorityId,
   });
 
   List<String> title;
   List<String> date;
-  List<String> priority;
+  List<String> priorityId;
 
   factory TaskError.fromJson(Map<String, dynamic> json) => TaskError(
         title: json["title"] != null
@@ -71,14 +77,14 @@ class TaskError {
         date: json["date"] != null
             ? List<String>.from(json["date"].map((x) => x))
             : null,
-        priority: json["priority"] != null
-            ? List<String>.from(json["priority"].map((x) => x))
+        priorityId: json["priority_id"] != null
+            ? List<String>.from(json["priority_id"].map((x) => x))
             : null,
       );
 
   Map<String, dynamic> toJson() => {
         "title": List<dynamic>.from(title.map((x) => x)),
         "date": List<dynamic>.from(date.map((x) => x)),
-        "priority": List<dynamic>.from(priority.map((x) => x)),
+        "priority_id": List<dynamic>.from(priorityId.map((x) => x)),
       };
 }
