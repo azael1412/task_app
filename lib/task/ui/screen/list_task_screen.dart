@@ -19,8 +19,7 @@ class ListTaskScreen extends StatefulWidget {
 }
 
 class _ListTaskScreenState extends State<ListTaskScreen> {
-  TaskBloc taskBloc;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
     // TODO: implement initState
@@ -29,53 +28,60 @@ class _ListTaskScreenState extends State<ListTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    taskBloc = Provider.of<TaskBloc>(context);
-    taskBloc.getTasks();
+    // taskBloc = Provider.of<TaskBloc>(context);
+    // taskBloc.getTasks();
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: FadeInRightBig(
-          child: Text(
-            "Lista de Tareas",
+    return ChangeNotifierProvider(
+      create: (_) => TaskBloc(),
+      child: Consumer<TaskBloc>(builder: (context, taskBloc, child) {
+        taskBloc.getTasks();
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: FadeInRightBig(
+              child: Text(
+                "Lista de Tareas",
+              ),
+            ),
+            centerTitle: true,
           ),
-        ),
-        centerTitle: true,
-      ),
-      body: StreamBuilder<List<Task>>(
-          // initialData: [],
-          stream: taskBloc.tasks, //taskBloc.tasksStream
-          builder: (context, AsyncSnapshot<List<Task>> snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return Loading.loadingIndicators(context: context);
-              case ConnectionState.waiting:
-                return Loading.loadingIndicators(context: context);
-              case ConnectionState.active:
-                return TaskList(
-                  snapshot: snapshot,
-                  scaffoldKey: _scaffoldKey,
-                );
-              case ConnectionState.done:
-                return TaskList(snapshot: snapshot, scaffoldKey: _scaffoldKey);
-            }
-            if (snapshot.hasError) {
-              return Text("${snapshot.error.toString()}");
-            }
-          }),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () => Navigator.pushNamed(context, AppRoutes.addTask,
-            arguments: [null, taskBloc.getTasks]).then((value) {
-          if (value is List && value != null) {
-            if (value[0] != null && value[0]) {
-              SnackBarMessage.message(
-                  text: value[1], scaffoldKey: _scaffoldKey);
-            }
-          }
-        }),
-        child: Icon(Icons.add),
-      ),
+          body: StreamBuilder<List<Task>>(
+              // initialData: [],
+              stream: taskBloc.tasks, //taskBloc.tasksStream
+              builder: (context, AsyncSnapshot<List<Task>> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return Loading.loadingIndicators(context: context);
+                  case ConnectionState.waiting:
+                    return Loading.loadingIndicators(context: context);
+                  case ConnectionState.active:
+                    return TaskList(
+                      snapshot: snapshot,
+                      scaffoldKey: _scaffoldKey,
+                    );
+                  case ConnectionState.done:
+                    return TaskList(
+                        snapshot: snapshot, scaffoldKey: _scaffoldKey);
+                }
+                if (snapshot.hasError) {
+                  return Text("${snapshot.error.toString()}");
+                }
+              }),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () => Navigator.pushNamed(context, AppRoutes.addTask,
+                arguments: [null, taskBloc.getTasks]).then((value) {
+              if (value is List && value != null) {
+                if (value[0] != null && value[0]) {
+                  SnackBarMessage.message(
+                      text: value[1], scaffoldKey: _scaffoldKey);
+                }
+              }
+            }),
+            child: Icon(Icons.add),
+          ),
+        );
+      }),
     );
   }
 }
