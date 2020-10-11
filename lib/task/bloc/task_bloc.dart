@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
+
 import 'package:task_app/task/models/task.dart';
+import 'package:task_app/task/models/priority.dart';
 import 'package:task_app/task/resources/task_repository.dart';
 
 class TaskBloc extends ChangeNotifier {
@@ -10,6 +12,8 @@ class TaskBloc extends ChangeNotifier {
       StreamController<List<Task>>.broadcast();
 
   Stream<List<Task>> get tasks => _tasks$.stream;
+
+  Future<List<Priority>> get priorities => _repository.priorities();
 
   Future<dynamic> create(Task task) => _repository.create(task);
 
@@ -22,11 +26,10 @@ class TaskBloc extends ChangeNotifier {
   Future<List<Task>> getTasks() async {
     final tasks = await _repository.tasks();
     _tasks$.sink.add(tasks);
-
     return tasks;
   }
 
-  dispose() {
+  void dispose() {
     _tasks$?.close();
   }
 }
