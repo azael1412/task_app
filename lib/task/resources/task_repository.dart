@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:task_app/task/models/task.dart';
+import 'package:task_app/task/models/priority.dart';
 import 'package:task_app/task/resources/task_provider.dart';
 
 class TaskRepository {
@@ -14,4 +16,6 @@ class TaskRepository {
   Future<dynamic> changeStatus(Task task) => taskProvider.changeStatus(task);
   //delete
   Future<dynamic> delete(Task task) => taskProvider.delete(task);
+  //priorities
+  Future<List<Priority>> priorities() => taskProvider.priorities();
 }
