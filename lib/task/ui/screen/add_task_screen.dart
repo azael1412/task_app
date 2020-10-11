@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/task/models/message.dart';
+import 'package:task_app/task/models/priority.dart';
 
 import 'package:task_app/task/models/task.dart';
 import 'package:task_app/task/bloc/task_bloc.dart';
@@ -17,13 +18,11 @@ class AddTaskScreen extends StatefulWidget {
 class _AddTaskScreenState extends State<AddTaskScreen> {
   TaskBloc _taskBloc = TaskBloc();
   String _title;
-  String _priority;
+  int _priority;
   DateTime _dateTime = DateTime.now();
 
   TextEditingController _dateController = TextEditingController();
   TextEditingController _titleController = TextEditingController();
-
-  final List<String> _priorities = ['Low', 'Medium', 'High'];
 
   final DateFormat _dateFormatter = DateFormat('MMMM dd, yyyy', 'es_Es');
   //errors variable
@@ -38,8 +37,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (widget.task != null) {
       _title = widget.task.title;
       _dateTime = DateTime.parse(widget.task.date);
-      _priority = widget.task.priority;
+      _priority = widget.task.priorityId;
     }
+    print("prioridad:$_priority");
     _dateController.text = _dateFormatter.format(_dateTime);
     _titleController.text = _title;
   }
@@ -72,7 +72,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     Task task = Task(
         title: _title,
         date: "$_dateTime".substring(0, 10),
-        priority: _priority);
+        priorityId: _priority);
 
     if (widget.task == null) {
       _taskBloc.create(task).then((response) {
@@ -85,7 +85,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             _titleError = response.title != null ? response.title[0] : null;
             _dateTimeError = response.date != null ? response.date[0] : null;
             _priorityError =
-                response.priority != null ? response.priority[0] : null;
+                response.priorityId != null ? response.priorityId[0] : null;
           });
         }
       });
@@ -101,17 +101,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             _titleError = response.title != null ? response.title[0] : null;
             _dateTimeError = response.date != null ? response.date[0] : null;
             _priorityError =
-                response.priority != null ? response.priority[0] : null;
+                response.priorityId != null ? response.priorityId[0] : null;
           });
         }
       });
     }
   }
-  // }
-
-  /*_delete() {
-    print("delete");
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -181,40 +176,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             )),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 20.0),
-                          child: DropdownButtonFormField(
-                            value: this._priority,
-                            isDense: true,
-                            icon: Icon(Icons.arrow_drop_down_circle),
-                            iconSize: 22.0,
-                            iconEnabledColor: Theme.of(context).primaryColor,
-                            items: _priorities.map((String priority) {
-                              return DropdownMenuItem<String>(
-                                value: priority,
-                                child: Text(
-                                  priority,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                            style: TextStyle(fontSize: 18.0),
-                            decoration: InputDecoration(
-                              labelText: 'Priority',
-                              errorText: _priorityError,
-                              labelStyle: TextStyle(fontSize: 18.0),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            validator: (input) => this._priorityError,
-                            onChanged: (value) {
-                              setState(() {
-                                this._priority = value;
-                              });
-                            },
-                          ),
+                          child: _dropdownButtonProperties(),
                         ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 20.0),
@@ -235,27 +197,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             onPressed: _submit,
                           ),
                         ),
-                        /*widget.task != null
-                            ? Container(
-                                margin: EdgeInsets.symmetric(vertical: 20.0),
-                                height: 60.0,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
-                                child: FlatButton(
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                    ),
-                                  ),
-                                  onPressed: _delete,
-                                ),
-                              )
-                            : SizedBox.shrink(),*/
                       ],
                     ),
                   )
@@ -294,5 +235,52 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     } else {
       Navigator.of(context).pop();
     }
+  }
+
+  Widget _dropdownButtonProperties() {
+    return FutureBuilder(
+        future: _taskBloc.priorities,
+        builder:
+            (BuildContext context, AsyncSnapshot<List<Priority>> snapshot) {
+          if (snapshot.hasData) {
+            return DropdownButtonFormField(
+              value: this._priority,
+              isDense: true,
+              icon: Icon(Icons.arrow_drop_down_circle),
+              iconSize: 22.0,
+              iconEnabledColor: Theme.of(context).primaryColor,
+              items: snapshot.data?.map((Priority priority) {
+                    return DropdownMenuItem<int>(
+                      value: priority.id,
+                      child: Text(
+                        priority.name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    );
+                  })?.toList() ??
+                  [],
+              style: TextStyle(fontSize: 18.0),
+              decoration: InputDecoration(
+                labelText: 'Priority',
+                errorText: _priorityError,
+                labelStyle: TextStyle(fontSize: 18.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              validator: (input) => this._priorityError,
+              onChanged: (value) {
+                setState(() {
+                  this._priority = value;
+                });
+              },
+            );
+          } else {
+            return CircularProgressIndicator();
+          }
+        });
   }
 }
